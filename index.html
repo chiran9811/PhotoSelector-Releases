@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Selector — Studio | Fast Wedding & Event Photo Culling</title>
+  <style>
+    :root {
+      --bg: #0c0b10;
+      --surface: #15131c;
+      --surface-2: #1e1b28;
+      --border: #2b2638;
+      --text: #f5f3f7;
+      --muted: #a19bb0;
+      --accent: #c82864;
+      --accent-hover: #e03274;
+      --green: #10b981;
+      --amber: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; }
+    body { background: radial-gradient(circle at top center, #1d1629 0%, var(--bg) 55%); color: var(--text); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1060px; margin: 0 auto; padding: 0 20px; }
+
+    /* Navbar */
+    header { border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); position: sticky; top: 0; background: rgba(12,11,16,0.82); z-index: 50; }
+    .nav { display: flex; justify-content: space-between; align-items: center; height: 68px; }
+    .brand { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+    .brand-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px var(--accent); }
+    .nav-links { display: flex; gap: 22px; font-size: 14px; color: var(--muted); align-items: center; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { background: var(--accent); color: #fff !important; padding: 8px 16px; border-radius: 10px; font-weight: 600; }
+
+    /* Hero */
+    .hero { text-align: center; padding: 78px 0 56px; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(200,40,100,0.15); border: 1px solid rgba(200,40,100,0.35); color: #ff7aa8; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 18px; }
+    .hero p { max-width: 640px; margin: 0 auto 32px; color: var(--muted); font-size: 17px; }
+    .dl-grid { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+    .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 14px; font-weight: 700; font-size: 15px; transition: 0.18s; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 10px 28px rgba(200,40,100,0.35); }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .btn-secondary { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
+    .btn-secondary:hover { border-color: #4b4263; transform: translateY(-2px); }
+    .sub-note { font-size: 13px; color: var(--muted); }
+
+    /* Sections */
+    section { padding: 54px 0; }
+    .sec-title { text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+    .sec-sub { text-align: center; color: var(--muted); font-size: 15px; margin-bottom: 36px; }
+
+    /* Features */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px; }
+    .card h3 { font-size: 18px; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: 14px; }
+    .icon-box { width: 42px; height: 42px; border-radius: 12px; background: rgba(200,40,100,0.14); color: #ff7aa8; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px; }
+
+    /* Pricing */
+    .pricing-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 780px; margin: 0 auto; }
+    .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px; position: relative; }
+    .price-card.featured { border-color: var(--accent); background: linear-gradient(180deg, rgba(200,40,100,0.1) 0%, var(--surface) 100%); }
+    .tag-top { position: absolute; top: 18px; right: 18px; background: var(--green); color: #042f1e; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
+    .price-big { font-size: 34px; font-weight: 800; margin: 12px 0 6px; }
+    .price-big span { font-size: 14px; font-weight: 500; color: var(--muted); }
+    .list { list-style: none; margin: 18px 0 24px; }
+    .list li { font-size: 14px; color: var(--muted); margin-bottom: 10px; display: flex; gap: 8px; }
+    .list li::before { content: "✓"; color: var(--green); font-weight: 800; }
+
+    /* Steps */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); padding: 32px 0; text-align: center; color: var(--muted); font-size: 13px; margin-top: 40px; }
+    @media (max-width: 640px) { .nav-links a:not(.nav-cta) { display: none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="brand-dot"></span> Photo Selector — Studio</div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#download" class="nav-cta">Download v1.1.1</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="download">
+      <div class="pill">VERSION 1.1.1 · WINDOWS &amp; MACOS</div>
+      <h1>Select &amp; Deliver Event Photos<br/>10x Faster</h1>
+      <p>Built for wedding and event photographers. Drag &amp; drop your shoot folder, preview high-res images smoothly, shortlist client picks, and export ready-to-edit folders offline.</p>
+
+      <div class="dl-grid">
+        <a class="btn btn-primary" href="https://github.com/chiran9811/PhotoSelector-Releases/releases/download/v1.1.1/Photo.Selector_1.1.1_x64-setup.exe">
+          🪟 Download for Windows (.exe)
+        </a>
+        <a class="btn btn-secondary" href="https://github.com/chiran9811/PhotoSelector-Releases/releases/download/v1.1.1/Photo.Selector_1.1.1_aarch64.dmg">
+          🍎 Download for macOS (.dmg)
+        </a>
+      </div>
+      <div class="sub-note">
+        Alternative Windows Installer: <a href="https://github.com/chiran9811/PhotoSelector-Releases/releases/download/v1.1.1/Photo.Selector_1.1.1_x64_en-US.msi" style="text-decoration:underline;color:#d6d0e3;">Download .msi</a> · Includes 24-Hour Free Trial
+      </div>
+    </section>
+
+    <section id="features">
+      <h2 class="sec-title">Why Photographers Love Photo Selector</h2>
+      <p class="sec-sub">Lightweight desktop speed with zero monthly subscriptions.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="icon-box">⚡</div>
+          <h3>Instant Folder Culling</h3>
+          <p>Drop any RAW/JPEG shoot folder and browse thousands of photos smoothly without lag or cloud upload delays.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box">📴</div>
+          <h3>Works 100% Offline</h3>
+          <p>Sign in once with Gmail to verify your trial or Lifetime license—then work anywhere on location with zero internet.</p>
+        </div>
+        <div class="card">
+          <div class="icon-box">💎</div>
+          <h3>One-Time Lifetime Price</h3>
+          <p>No recurring monthly bills. Pay just LKR 1,000 once and own Photo Selector permanently on your workstation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works">
+      <h2 class="sec-title">Get Started in 60 Seconds</h2>
+      <p class="sec-sub">Simple setup for both Windows PCs and Apple Silicon Macs.</p>
+      <div class="steps">
+        <div class="card">
+          <div class="step-num">1</div>
+          <h3>Install App</h3>
+          <p>Download the <code>.exe</code> for Windows or <code>.dmg</code> for Mac and install it on your computer.</p>
+        </div>
+        <div class="card">
+          <div class="step-num">2</div>
+          <h3>Start 24h Free Trial</h3>
+          <p>Open the app and sign in with your Gmail account to unlock your 1-day free trial automatically.</p>
+        </div>
+        <div class="card">
+          <div class="step-num">3</div>
+          <h3>Activate Lifetime</h3>
+          <p>After your trial, click <b>Buy Lifetime via WhatsApp</b> inside the app to activate for LKR 1,000.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <h2 class="sec-title">Simple, Honest Pricing</h2>
+      <p class="sec-sub">Try everything free for 24 hours before paying a single rupee.</p>
+      <div class="pricing-wrap">
+        <div class="price-card">
+          <h3>24-Hour Free Trial</h3>
+          <div class="price-big">LKR 0 <span>/ 24 hours</span></div>
+          <ul class="list">
+            <li>Full access to all Studio features</li>
+            <li>Instant activation with Gmail login</li>
+            <li>Offline support during trial window</li>
+            <li>1 free trial per computer</li>
+          </ul>
+          <a href="#download" class="btn btn-secondary" style="width:100%;justify-content:center;">Download Free Trial</a>
+        </div>
+
+        <div class="price-card featured">
+          <span class="tag-top">BEST VALUE</span>
+          <h3>Lifetime Pro License</h3>
+          <div class="price-big">LKR 1,000 <span>/ one-time</span></div>
+          <ul class="list">
+            <li>Unlimited lifetime usage — no monthly fees</li>
+            <li>Full offline access anytime</li>
+            <li>Bound to your Gmail &amp; single workstation</li>
+            <li>Direct WhatsApp activation &amp; support</li>
+          </ul>
+          <a href="https://wa.me/94760933538?text=Hi!%20I%20want%20to%20buy%20Photo%20Selector%20Lifetime%20License%20(LKR%201,000)." target="_blank" class="btn btn-primary" style="width:100%;justify-content:center;">💬 Buy via WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Chandeepa Pathirana · Photo Selector Studio. Need help? <a href="https://wa.me/94760933538" style="text-decoration:underline;">Contact via WhatsApp</a></p>
+    </div>
+  </footer>
+</body>
+</html>
